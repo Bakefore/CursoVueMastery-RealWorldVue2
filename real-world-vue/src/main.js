@@ -4,6 +4,8 @@ import router from "./router";
 import store from "./store";
 import upperFirst from "lodash/upperFirst";
 import camelCase from "lodash/camelCase";
+import BaseIcon from "@/components/BaseIcon";
+import "nprogress/nprogress.css";
 
 const requireComponent = require.context(
   "./components",
@@ -26,5 +28,6 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
+  BaseIcon,
   render: (h) => h(App),
 }).$mount("#app");
