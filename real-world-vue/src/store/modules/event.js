@@ -6,6 +6,7 @@ export const state = {
   events: [],
   eventsTotal: 0,
   event: {},
+  perPage: 3,
 };
 export const getters = {
   getEventById: (state) => (id) => {
@@ -46,8 +47,8 @@ export const actions = {
         throw error;
       });
   },
-  fetchEvents({ commit, dispatch }, { perPage, page }) {
-    EventService.getEvents(perPage, page)
+  fetchEvents({ commit, dispatch, state }, { page }) {
+    return EventService.getEvents(state.perPage, page)
       .then((response) => {
         console.log(`Total events are ${response.headers["x-total-count"]}`);
         commit("SET_EVENTS_TOTAL", parseInt(response.headers["x-total-count"]));
@@ -61,24 +62,21 @@ export const actions = {
         dispatch("notification/add", notification, { root: true });
       });
   },
-  fetchEvent({ commit, getters, dispatch }, id) {
+  fetchEvent({ commit, getters, state }, id) {
+    if (id == state.event.id) {
+      return state.event;
+    }
+
     var event = getters.getEventById(id);
+
     if (event) {
       commit("SET_EVENT", event);
       return event;
     } else {
-      return EventService.getEvent(id)
-        .then((response) => {
-          commit("SET_EVENT", response.data);
-          return response.data;
-        })
-        .catch((error) => {
-          const notification = {
-            type: "error",
-            message: `There was a problem fetching event: ${error.message}`,
-          };
-          dispatch("notification/add", notification, { root: true });
-        });
+      return EventService.getEvent(id).then((response) => {
+        commit("SET_EVENT", response.data);
+        return response.data;
+      });
     }
   },
 };
