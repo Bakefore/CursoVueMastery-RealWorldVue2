@@ -7,6 +7,7 @@ import camelCase from "lodash/camelCase";
 import BaseIcon from "@/components/BaseIcon";
 import "nprogress/nprogress.css";
 import Vuelidate from "vuelidate";
+import DateFilter from "./filters/date";
 
 const requireComponent = require.context(
   "./components",
@@ -24,6 +25,7 @@ requireComponent.keys().forEach((fileName) => {
   Vue.component(componentName, componentConfig.default || componentConfig);
 });
 
+Vue.filter("date", DateFilter);
 Vue.use(Vuelidate);
 Vue.config.productionTip = false;
 
